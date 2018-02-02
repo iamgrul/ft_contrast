@@ -6,7 +6,7 @@
 /*   By: ahuba <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/21 15:51:11 by ahuba             #+#    #+#             */
-/*   Updated: 2018/01/03 23:41:23 by ahuba            ###   ########.fr       */
+/*   Updated: 2018/02/02 22:05:43 by ahuba            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@
 # include <unistd.h>
 # include <string.h>
 # include <stdlib.h>
+# include <fcntl.h>
 
+# define BUFF_SIZE 15
 # define SPACES(x) (x == ' ' || x == '\t' || x == '\n')
 
 typedef	struct		s_list
@@ -81,6 +83,7 @@ int					ft_strncmp(const char *s1, const char *s2, size_t n);
 int					ft_memcmp(const void *s1, const void *s2, size_t n);
 int					ft_atoi(const char *str);
 int					ft_countwords(char const *s, char c);
+int					get_next_part(const int fd, char **line, char *c, int len);
 int					ft_islower(int c);
 int					ft_isupper(int c);
 int					ft_tolower(int c);
