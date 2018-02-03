@@ -13,17 +13,27 @@
 #ifndef FT_CONTRAST_H
 # define FT_CONTRAST_H
 
-# include <libft.h>
+# include "./libft/libft.h"
 # include <stdlib.h>
 # include <fcntl.h>
 # include <pthread.h>
+# include <sys/types.h>
 
-typedef struct		s_
+typedef struct	s_thread
 {
+	int			id;                        /* friendly id               */
+	pthread_t	pthread;                   /* pointer to actual thread  */
+//	struct thpool_ *thpool_p;            /* access to thpool          */
+}				t_thread;
 
-}					t_;
+static volatile int threads_keepalive;
 
-void	();
+// typedef struct		s_
+// {
+
+// }					t_;
+
+// void	();
 
 
 #endif
