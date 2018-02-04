@@ -20,4 +20,37 @@
 # include <sys/types.h>
 # include <stdio.h>
 
+<<<<<<< HEAD
+=======
+# define LINE_SIZE 70
+
+typedef struct	s_thread
+{
+	int			id;                        /* friendly id               */
+	pthread_t	pthread;                   /* pointer to actual thread  */
+//	struct thpool_ *thpool_p;            /* access to thpool          */
+}				t_thread;
+
+typedef struct				s_data
+{
+	char					*str;
+	struct s_data			*next;
+}							t_data;
+
+int		g_src;
+int		g_dest;
+float	g_contr;
+float	g_mgl;
+float	g_cgl;
+static volatile int threads_keepalive;
+
+// typedef struct		s_
+// {
+
+// }					t_;
+
+// void	();
+
+
+>>>>>>> toha
 #endif

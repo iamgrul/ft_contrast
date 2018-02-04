@@ -7,9 +7,11 @@ OBJ = $(SRC:.c=.o)
 CFLAGS = -Wall -Werror -Wextra
 
 all: $(NAME)
+	./$(NAME)
 
 $(NAME): libft/libft.a $(OBJ)
 	@gcc $(OBJ) libft/libft.a -I libft -o $(NAME)
+	
 
 %.o: %.c ft_contrast.h
 	@gcc $(CFLAGS) -c -o $@ $<

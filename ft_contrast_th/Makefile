@@ -8,13 +8,14 @@ INC = ../libft/
 
 CFLAGS = -Wall -Werror -Wextra
 
-# all: 
-# 	gcc *.c -o $(NAME)
+all:
+	gcc -o $(NAME) -g *.c -I$(INC) -L$(INC) -lft
+	./ft_contrast_th
 
-all: $(NAME)
+#all: $(NAME)
 
 $(NAME): $(INC)/libft.a $(OBJ)
-	gcc $(OBJ) -I$(INC) -o $(NAME) -L$(INC) -lft
+	gcc -g $(OBJ) -I$(INC) -o $(NAME) -L$(INC) -lft
 	./ft_contrast_th
 
 %.o: %.c ft_contrast_th.h
