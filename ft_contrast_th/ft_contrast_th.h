@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "./libft/libft.h"
+#include "libft.h"
 
 /* Threads`s possible statuses; */
 #define EMPTY		0

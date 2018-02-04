@@ -26,7 +26,8 @@ static void thread_queue(void)
   if (next_thread == 0) 
   {
     write(2, "thread_queue: no runnable threads; deadlock\n", 48);
-    exit(0);
+    //exit(0);
+    return ;
   }
   if (current_thread != next_thread) 
     next_thread->status = RUNNING;
@@ -107,12 +108,12 @@ int		main(void)
 
   thread_init();
   thread_create(mythread1);
-  mythread1();
-  thread_queue();
+ // mythread1();
+  //thread_queue();
   thread_create(mythread2);
-  mythread2();
+ // mythread2();
   thread_create(mythread3);
-  mythread3();
+ // mythread3();
   thread_queue();
   return (0);
 }
