@@ -18,6 +18,7 @@
 # include <fcntl.h>
 # include <pthread.h>
 # include <sys/types.h>
+# include <stdio.h>
 
 typedef struct	s_thread
 {
@@ -26,6 +27,9 @@ typedef struct	s_thread
 //	struct thpool_ *thpool_p;            /* access to thpool          */
 }				t_thread;
 
+int		g_src;
+int		g_dest;
+int		g_contr;
 static volatile int threads_keepalive;
 
 // typedef struct		s_
