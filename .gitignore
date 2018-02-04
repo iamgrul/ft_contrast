@@ -1,6 +1,5 @@
+.gitignore
 *~
 *o
 *
-author
-!ft_contrast_th/*
-/.gitignore
+!main.c
