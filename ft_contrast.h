@@ -20,24 +20,4 @@
 # include <sys/types.h>
 # include <stdio.h>
 
-typedef struct	s_thread
-{
-	int			id;                        /* friendly id               */
-	pthread_t	pthread;                   /* pointer to actual thread  */
-//	struct thpool_ *thpool_p;            /* access to thpool          */
-}				t_thread;
-
-int		g_src;
-int		g_dest;
-int		g_contr;
-static volatile int threads_keepalive;
-
-// typedef struct		s_
-// {
-
-// }					t_;
-
-// void	();
-
-
 #endif

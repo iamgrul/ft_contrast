@@ -1,119 +1,126 @@
 #include "ft_contrast_th.h"
+#include <pthread.h>
+#include <signal.h>
 
-void  thread_init(void)
+typedef struct s_job
 {
-  current_thread = &all_thread[0];
-  current_thread->status = RUNNING;
+  size_t       id;
+  void    (*task)(void *arg);
+  void    *arg;
+  struct s_job   *next;
+
+} t_job;
+
+
+// typedef struct s_thread
+// {
+//   size_t       id;
+//   pthread_t   thread;
+// } t_thread;
+
+typedef struct s_tp_thread
+{
+  size_t      threads_max;
+  size_t      threads_working;
+  size_t      jobs_amount;
+  pthread_t    *threads;
+  t_job       *jobs;
+
+	// struct thpool_* thpool_p;            /* access to thpool          */
+
+} t_tp_thread;
+
+
+
+t_job *j_create(void    (*_job)(void *arg),void *_arg, int _id)
+{
+  t_job *job;
+
+  job = NULL;
+  if (!(job = malloc(sizeof(t_job))))
+  {
+    ft_putendl("Failed malloc while creating a job");
+    return NULL;
+  }
+  job->id = _id;
+  job->arg = _arg;
+  job->task = _job;
+  job->next = NULL;
+  return (job);
 }
 
-static void thread_queue(void)
+//TODO: start LOOP waiting for some jobs
+t_tp_thread *tp_create(size_t num)
 {
-  thread_p t;
+  t_tp_thread *pool;
 
-  /* Look for other runnable threads */
-  t = all_thread;
-  while (t < all_thread + MAX_THREAD)
+  pool = NULL;
+  if (!(pool= malloc(sizeof(t_tp_thread))))
   {
-    if (t->status == RUNNABLE && t != current_thread)
-    {
-      next_thread = t;
-        break;
-    }
-    t++;
+    ft_putendl("Failed malloc while creating a thread pool");
+    return NULL;
   }
-  if (t >= all_thread + MAX_THREAD && current_thread->status == RUNNABLE) 
-    next_thread = current_thread;
-  if (next_thread == 0) 
+  if (!(pool->threads = malloc(sizeof(pthread_t))))
   {
-    write(2, "thread_queue: no runnable threads; deadlock\n", 48);
-    //exit(0);
+    free(pool);
+    ft_putendl("Failed malloc while creating a thread pool");
+    return NULL;
+  }
+  pool->threads_max = num;
+  pool->jobs = NULL;
+  pool->threads_working = 0;
+  pool->jobs_amount = 0;
+  return (pool);
+}
+void tp_queue_added(t_tp_thread *tp)
+{
+  t_job *job;
+
+  pthread_create(tp->threads, NULL, tp->jobs->task, tp->jobs->arg);
+  job = tp->jobs;
+  tp->jobs = tp->jobs->next;
+  job->next = NULL;
+  free(job);
+}
+//TODO: send signal to LOOP that is wating
+void tp_add_task(t_tp_thread *tp,void (*fun)(void *arg),void *arg)
+{
+  t_job *job;
+
+  if (!tp || !fun)
     return ;
+  job = tp->jobs;
+  if (tp->jobs)
+  {
+    while (tp->jobs->next)
+      tp->jobs = tp->jobs->next;
+     if (!(tp->jobs->next = j_create(fun, arg, tp->jobs_amount++)))
+      return ;
+    tp->jobs = job;
   }
-  if (current_thread != next_thread) 
-    next_thread->status = RUNNING;
   else
-    next_thread = 0;
+    tp->jobs = j_create(fun, arg, tp->jobs_amount++);
+  tp_queue_added(tp);
+}
+void fun(void *c)
+{
+  ft_putstr((char*)c);
+}
+int main(void)
+{
+t_tp_thread *pool;
+pool = tp_create(1);
+while (1)
+{
+  tp_add_task(pool, &fun, (void*)"111111111111");
+  tp_add_task(pool, &fun, (void*)"222222222222");
+  tp_add_task(pool, &fun, (void*)"333333333333");
+   tp_add_task(pool, &fun, (void*)"111111111111");
+  tp_add_task(pool, &fun, (void*)"222222222222");
+  tp_add_task(pool, &fun, (void*)"333333333333");
 }
 
-int   thread_create(void (*func)())
-{
-  thread_p t;
 
-  t = all_thread;
-  while (t < all_thread + MAX_THREAD)
-  {
-    if (t->status == EMPTY)
-      break ;
-    t++;
-  }
-  t->sp = (int *) (t->stack + STACK_SIZE);   // set sp to the top of the stack
-  *(int *)(t->sp) = (int)func;           // push return address on stack
-  t->status = RUNNABLE;
-  return ((int)func);
-}
-
-static void	mythread1(void)
-{
-  int i;
-
-  ft_putstr("thread running\n");
-  i = 0;
-  while (i++ < 10)
-  {
-    printf("thread 1: %x\n", (int)current_thread);
-    current_thread->status = RUNNABLE;
-    thread_queue();
-  }
-  ft_putstr("thread 1: exit\n");
-  current_thread->status = EMPTY;
-  thread_queue();
-}
-
-static void	mythread2(void)
-{
-  int i;
-
-  ft_putstr("thread running\n");
-  i = 0;
-  while (i++ < 10)
-  {
-    printf("thread 2: %x\n", (int)current_thread);
-    current_thread->status = RUNNABLE;
-    thread_queue();
-  }
-  ft_putstr("thread 2: exit\n");
-  current_thread->status = EMPTY;
-  thread_queue();
-}
-
-static void	mythread3(void)
-{
-  int i;
-
-  ft_putstr("thread running\n");
-  i = 0;
-  while (i++ < 10)
-  {
-    printf("thread 3: %x\n", (int)current_thread);
-    current_thread->status = RUNNABLE;
-    thread_queue();
-  }
-  ft_putstr("thread 3: exit\n");
-  current_thread->status = EMPTY;
-  thread_queue();
-}
-
-int		main(void) 
-{
-
-  thread_init();
-  thread_create(mythread1);
- // mythread1();
-  //thread_queue();
-  thread_create(mythread2);
- // mythread2();
-  thread_create(mythread3);
- // mythread3();
-  thread_queue();
-  return (0);
+sleep(1000);
+  return 0;
 }
