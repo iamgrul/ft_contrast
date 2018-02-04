@@ -20,6 +20,8 @@
 # include <sys/types.h>
 # include <stdio.h>
 
+# define LINE_SIZE 70
+
 typedef struct	s_thread
 {
 	int			id;                        /* friendly id               */
@@ -27,9 +29,17 @@ typedef struct	s_thread
 //	struct thpool_ *thpool_p;            /* access to thpool          */
 }				t_thread;
 
+typedef struct				s_data
+{
+	char					*str;
+	struct s_data			*next;
+}							t_data;
+
 int		g_src;
 int		g_dest;
-int		g_contr;
+float	g_contr;
+float	g_mgl;
+float	g_cgl;
 static volatile int threads_keepalive;
 
 // typedef struct		s_
