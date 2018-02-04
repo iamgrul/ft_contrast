@@ -1,5 +1,6 @@
 *~
 *o
 *
-!Makefile
-!.gitignore
+author
+!ft_contrast_th/*
+/.gitignore
